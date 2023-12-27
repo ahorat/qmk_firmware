@@ -12,42 +12,45 @@
 enum {
     TD_AE,
     TD_OE,
-    TD_UE
+    TD_UE,
+    TD_AT,
+    TD_EUR,
+    TD_COMM,
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[0] = LAYOUT_split_3x5_2(
-   KC_Q,       KC_W,       KC_E,    KC_R,    KC_T,       KC_Z,    TD(TD_UE),  KC_I,    TD(TD_OE),  KC_P, 
-   TD(TD_AE),  KC_S,       KC_D,    KC_F,    KC_G,       KC_H,    KC_J,       KC_K,    KC_L,       CH_EXLM, 
-   KC_Y,       KC_X,       KC_C,    KC_V,    KC_B,       KC_N,    KC_M,       CH_COMM, CH_DOT,     CH_MINS, 
-                                    TT(2), MT(MOD_LSFT,KC_SPC),     KC_LCTL, TT(1)),
+   TD(TD_AT),  KC_W,           TD(TD_EUR),     KC_R,           KC_T,       CH_Z,    TD(TD_UE),      KC_I,           TD(TD_OE),      KC_P, 
+   TD(TD_AE),  LALT_T(KC_S),   LSFT_T(KC_D),   LCTL_T(KC_F),   LGUI_T(KC_G),       RGUI_T(KC_H),    RCTL_T(KC_J),   RSFT_T(KC_K),   RALT_T(KC_L),   CH_EXLM, 
+   CH_Y,       KC_X,           KC_C,           KC_V,           KC_B,       KC_N,    KC_M,           TD_COMM,        CH_DOT,         CH_MINS, 
+                                    TT(2),                MT(MOD_LSFT,KC_SPC),   MT(KC_LCTL, KC_ENT), TT(1)),
                
 	[1] = LAYOUT_split_3x5_2(
    KC_ESC,     KC_PGUP,    KC_UP,   KC_PGDN, KC_PAST,     KC_BSPC, KC_P7,    KC_P8,    KC_P9,    KC_PPLS, 
-   KC_TAB,     KC_LEFT,    KC_DOWN, KC_RGHT, KC_PSLS,      KC_ENT,  KC_P4,    KC_P5,    KC_P6,    KC_PMNS, 
-   KC_ALGR,    KC_HOME,    KC_LGUI, KC_END,  KC_PSCR,    KC_P0,   KC_P1,    KC_P2,    KC_P3,    KC_PDOT,   
-                                    TT(2),   KC_TRNS,  TO(0), KC_TRNS),
+   KC_TAB,     KC_LEFT,    KC_DOWN, KC_RGHT, KC_PSLS,     KC_ENT,  RCTL_T(KC_P4),    RSFT_T(KC_P5),    LALT_T(KC_P6),    KC_PMNS, 
+   KC_DEL,    KC_HOME,    KC_LGUI, KC_END,  KC_PSCR,     KC_P0,   KC_P1,    KC_P2,    KC_P3,    KC_PDOT,   
+                                    TT(2),   KC_TRNS,     TO(0), KC_TRNS),
                                     
    [2] = LAYOUT_split_3x5_2(
-   CH_PERC,     CH_SLSH,    CH_DQUO,   CH_LPRN, CH_RPRN,    KC_BSPC, CH_EQL,   KC_NUM,   KC_NO,    KC_NO, 
-   CH_AMPR,     CH_BSLS,    CH_QUOT,   CH_LCBR, CH_RCBR,    KC_ENT,  KC_NO,    KC_NO,    KC_NO,    KC_NO, 
-   KC_NO,       CH_LABK,    CH_RABK,   CH_LBRC, CH_RBRC,    KC_NO,   KC_NO,    KC_NO,    KC_NO,    KC_NO,   
+   CH_PERC,     CH_SLSH,    CH_DQUO,   CH_LPRN, CH_RPRN,    KC_BSPC, CH_EQL,   KC_CAPS,  KC_F11,   KC_F12, 
+   CH_AMPR,     CH_BSLS,    CH_QUOT,   CH_LCBR, CH_RCBR,    KC_F6,   RCTL_T(KC_F7),    RSFT_T(KC_F8),    LALT_T(KC_F9),    KC_F10, 
+   CH_PIPE,     CH_LABK,    CH_RABK,   CH_LBRC, CH_RBRC,    KC_F1,   KC_F2,    KC_F3,    KC_F4,    KC_F5,   
                                        KC_TRNS, KC_TRNS,    TO(0),  TT(1))
 };
 
 const key_override_t delete_key_override = ko_make_basic(MOD_MASK_SHIFT, KC_BSPC, KC_DEL);
 const key_override_t ques_key_override = ko_make_basic(MOD_MASK_SHIFT, CH_EXLM, CH_QUES);
-const key_override_t ue_key_override = ko_make_basic(KC_ALGR, KC_U, CH_UDIA);
-const key_override_t oe_key_override = ko_make_basic(KC_ALGR, KC_O, CH_ODIA);
-const key_override_t ae_key_override = ko_make_basic(KC_ALGR, KC_A, CH_ADIA);
+const key_override_t numlok_capslok_override = ko_make_basic(MOD_MASK_SHIFT, KC_CAPS, KC_NUM);
+const key_override_t doublequote_override = ko_make_basic(MOD_MASK_SHIFT, CH_DQUO, CH_DEG);
+const key_override_t quote_override = ko_make_basic(MOD_MASK_SHIFT, CH_QUOT, CH_CIRC);
 
 // This globally defines all key overrides to be used
 const key_override_t **key_overrides = (const key_override_t *[]){
-    &delete_key_override,
+    //&delete_key_override,
     &ques_key_override,
-    //&ue_key_override,
-    //&oe_key_override,
-    //&ae_key_override,
+    &numlok_capslok_override,
+    &doublequote_override,
+    &quote_override,
     NULL // Null terminate the array of overrides!
 };
 
@@ -59,6 +62,9 @@ tap_dance_action_t tap_dance_actions[] = {
     [TD_AE] = ACTION_TAP_DANCE_DOUBLE( KC_A, CH_ADIA),
     [TD_OE] = ACTION_TAP_DANCE_DOUBLE( KC_O, CH_ODIA),
     [TD_UE] = ACTION_TAP_DANCE_DOUBLE( KC_U, CH_UDIA),
+    [TD_AT] = ACTION_TAP_DANCE_DOUBLE( KC_Q, CH_AT),
+    [TD_COMM] = ACTION_TAP_DANCE_DOUBLE( CH_COMM, CH_SCLN),
+    [TD_EUR] = ACTION_TAP_DANCE_DOUBLE( KC_E, CH_EURO),
 };
-#endif // defined(ENCODER_ENABLE) && defined(ENCODER_MAP_ENABLE)
+
 
